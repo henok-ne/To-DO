@@ -35,3 +35,27 @@ Difference between modifying a parameter and returning a value.**
 Example:
 
 Reassignment (does NOT modify original list):
+def load_tasks(tasks):
+    tasks = json.load(file)
+This creates a new list and does not affect the original list outside the function.
+
+Mutation (modifies original list):def load_tasks(tasks):
+    tasks.clear()
+    tasks.extend(json.load(file))
+This modifies the same list object.
+Better design approach:
+def load_tasks():
+    return json.load(file)
+Returning the data makes the function independent and cleaner.
+
+Rule learned:
+- If a function's job is to GET data → return it.
+- If a function's job is to DO something → perform the action without returning.
+
+How to Run
+
+1. Clone the repository
+2. Navigate to the project folder
+3. Run:
+
+python To-Do.py
