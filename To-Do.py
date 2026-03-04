@@ -1,102 +1,124 @@
 import json
 
-def load_tasks(tasks):
-    try:
-        with open("tasks.json","r") as file:
-                tasks.extend(json.load(file))
-    except FileNotFoundError:
-        print("No existing tasks found. Starting fresh.")
 
-def save_tasks(tasks): 
-    with open("tasks.json","w") as file:
-        json.dump(tasks,file)
+def load_tasks():
+    """Load tasks from JSON file safely."""
+    try:
+        with open("tasks.json", "r") as file:
+            return json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+
+
+def save_tasks(tasks):
+    """Save tasks to JSON file."""
+    with open("tasks.json", "w") as file:
+        json.dump(tasks, file, indent=4)
+
 
 def add_task(task, tasks):
-    if task=="":
-        print("task can't be empty")
+    if not task.strip():
+        print("Task cannot be empty.")
         return
-    val={
-        "title":task,
-        "completed":False
-        }
-    tasks.append(val)
-    save_tasks(tasks)
-    print("Added successfully")
 
-def view_task(tasks):
+    new_task = {
+        "title": task.strip(),
+        "completed": False
+    }
+
+    tasks.append(new_task)
+    save_tasks(tasks)
+    print("Task added successfully.")
+
+
+def view_tasks(tasks):
     if not tasks:
         print("No tasks available.")
         return
-    
+
+    print("\nYour Tasks:")
     for idx, task in enumerate(tasks, start=1):
-        print(idx,task["title"],task["completed"])
+        status = "✓ Completed" if task["completed"] else "✗ Not Completed"
+        print(f"{idx}. {task['title']} [{status}]")
+    print()
+
 
 def edit_task(tasks):
     if not tasks:
         print("Nothing to edit.")
         return
 
-    view_task(tasks)
+    view_tasks(tasks)
 
     try:
-        info = int(input("Enter task number to edit: "))
-        idx = info - 1
+        number = int(input("Enter task number to toggle completion: "))
+        index = number - 1
 
-        if idx < 0 or idx >= len(tasks):
-            print("Invalid number.")
-        else:
-            new_completed = input("Enter new completion status (True/False): ").strip().lower() == "true"
-            tasks[idx]["completed"] = new_completed
-            save_tasks(tasks)
-            print(f"Task {info} updated successfully.")
+        if index < 0 or index >= len(tasks):
+            print("Invalid task number.")
+            return
+
+        # Toggle completion status
+        tasks[index]["completed"] = not tasks[index]["completed"]
+        save_tasks(tasks)
+
+        print("Task updated successfully.")
 
     except ValueError:
         print("Please enter a valid number.")
 
-def dele_task(tasks):
+
+def delete_task(tasks):
     if not tasks:
         print("Nothing to delete.")
         return
 
-    view_task(tasks)
+    view_tasks(tasks)
 
     try:
-        info = int(input("Enter task number to delete: "))
-        idx = info - 1
+        number = int(input("Enter task number to delete: "))
+        index = number - 1
 
-        if idx < 0 or idx >= len(tasks):
-            print("Invalid number.")
-        else:
-            removed = tasks.pop(idx)
-            save_tasks(tasks)
-            print(f"{removed} deleted successfully")
+        if index < 0 or index >= len(tasks):
+            print("Invalid task number.")
+            return
+
+        removed = tasks.pop(index)
+        save_tasks(tasks)
+
+        print(f"'{removed['title']}' deleted successfully.")
 
     except ValueError:
         print("Please enter a valid number.")
 
 
-
 def main():
-       tasks = []
-       load_tasks(tasks)
-       
-       while True:
-        command = input("Enter command (add/view/delete/exit): ").strip().lower()
+    tasks = load_tasks()
+
+    while True:
+        command = input(
+            "Enter command (add/view/edit/delete/exit): "
+        ).strip().lower()
 
         if command == "add":
             task = input("Enter task: ")
-            add_task(task,tasks)
+            add_task(task, tasks)
+
         elif command == "view":
-            view_task(tasks)
+            view_tasks(tasks)
+
         elif command == "edit":
             edit_task(tasks)
+
         elif command == "delete":
-            dele_task(tasks)
+            delete_task(tasks)
+
         elif command == "exit":
-            print("Exiting the program.")
+            print("Exiting program.")
             break
+
         else:
-            print("Invalid command. Please try again.")
+            print("Invalid command. Try again.")
 
 
 if __name__ == "__main__":
