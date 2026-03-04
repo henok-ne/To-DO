@@ -31,6 +31,28 @@ def view_task(tasks):
     for idx, task in enumerate(tasks, start=1):
         print(idx,task["title"],task["completed"])
 
+def edit_task(tasks):
+    if not tasks:
+        print("Nothing to edit.")
+        return
+
+    view_task(tasks)
+
+    try:
+        info = int(input("Enter task number to edit: "))
+        idx = info - 1
+
+        if idx < 0 or idx >= len(tasks):
+            print("Invalid number.")
+        else:
+            new_completed = input("Enter new completion status (True/False): ").strip().lower() == "true"
+            tasks[idx]["completed"] = new_completed
+            save_tasks(tasks)
+            print(f"Task {info} updated successfully.")
+
+    except ValueError:
+        print("Please enter a valid number.")
+
 def dele_task(tasks):
     if not tasks:
         print("Nothing to delete.")
@@ -66,6 +88,8 @@ def main():
             add_task(task,tasks)
         elif command == "view":
             view_task(tasks)
+        elif command == "edit":
+            edit_task(tasks)
         elif command == "delete":
             dele_task(tasks)
         elif command == "exit":
