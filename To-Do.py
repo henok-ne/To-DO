@@ -29,7 +29,7 @@ def view_task(tasks):
         return
     
     for idx, task in enumerate(tasks, start=1):
-        print(idx,".",task["title"],",",task["completed"])
+        print(idx,task["title"],task["completed"])
 
 def dele_task(tasks):
     if not tasks:
@@ -46,7 +46,7 @@ def dele_task(tasks):
             print("Invalid number.")
         else:
             removed = tasks.pop(idx)
-            save_tasks()
+            save_tasks(tasks)
             print(f"{removed} deleted successfully")
 
     except ValueError:
