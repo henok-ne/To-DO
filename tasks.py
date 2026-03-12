@@ -1,4 +1,5 @@
 from storage import save_tasks
+from struct12 import Task
 def add_task(task, tasks):
     if not task.strip():
         print("Task cannot be empty.")
