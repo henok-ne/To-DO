@@ -1,19 +1,30 @@
 import json
-
+from struct import Task
 
 def load_tasks():
     """Load tasks from JSON file safely."""
     try:
         with open("tasks.json", "r") as file:
-            return json.load(file)
+            data= json.load(file)
+            tasks = []
+
+            for item in data:
+                task = Task(item["title"])
+                task.completed = item["completed"]
+                tasks.append(task)
+
+        return tasks
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
 
 def save_tasks(tasks):
     """Save tasks to JSON file."""
+    data=[]
+    for task in tasks:
+        data.append(task.to_dict())
     with open("tasks.json", "w") as file:
-        json.dump(tasks, file, indent=4)
+        json.dump(data, file, indent=4)
 
 
 def add_task(task, tasks):
@@ -21,10 +32,11 @@ def add_task(task, tasks):
         print("Task cannot be empty.")
         return
 
-    new_task = {
-        "title": task.strip(),
-        "completed": False
-    }
+    # new_task = {
+    #     "title": task.strip(),
+    #     "completed": False
+    # }
+    new_task = Task(task.strip())
 
     tasks.append(new_task)
     save_tasks(tasks)
@@ -38,8 +50,8 @@ def view_tasks(tasks):
 
     print("\nYour Tasks:")
     for idx, task in enumerate(tasks, start=1):
-        status = "✓ Completed" if task["completed"] else "✗ Not Completed"
-        print(f"{idx}. {task['title']} [{status}]")
+        status = "✓ Completed" if task.completed else "✗ Not Completed"
+        print(f"{idx}. {task.title} [{status}]")
     print()
 
 
@@ -59,7 +71,7 @@ def edit_task(tasks):
             return
 
         # Toggle completion status
-        tasks[index]["completed"] = not tasks[index]["completed"]
+        tasks[index].toggle()
         save_tasks(tasks)
 
         print("Task updated successfully.")
