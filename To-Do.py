@@ -1,5 +1,5 @@
 import json
-from struct import Task
+from struct12 import Task
 
 def load_tasks():
     """Load tasks from JSON file safely."""
