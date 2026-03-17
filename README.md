@@ -20,36 +20,37 @@ It demonstrates:
    - JSON body example:  
    
 json
-   {
-     "title": "Study Python",
-     "completed": false
-   }
 
+            {
+              "title": "Study Python",
+              "completed": false
+            }
+   
 2. View All Tasks
-GET /tasks
+   
+    GET /tasks
+   
 Returns all tasks in structured JSON
+
 3. Update Task Completion
-PUT /tasks/{task_id}
+   
+     PUT /tasks/{task_id}
+   
 JSON body example:
+
 json
-   {
-     "title": "Study Python",
-     "completed": false
-   }
-View All Tasks
-GET /tasks
-Returns all tasks in structured JSON
-Update Task Completion
-PUT /tasks/{task_id}
-JSON body example:
-JSON
-{
-  "completed": true
-}
-Delete Task
-DELETE /tasks/{task_id}
+
+         {
+           "completed": true
+         }
+
+4. Delete Task
+   
+   DELETE /tasks/{task_id}
+
 Removes a task by its unique ID
-📝 Task Model
+
+   📝 Task Model
 Tasks are represented using a dataclass:
 Python
 @dataclass
@@ -58,35 +59,44 @@ class Task:
     title: str
     completed: bool = False
 Each task has a unique ID, title, and completion status.
+
 💻 How to Run
-Clone this repository:
-Bash
-git clone <your-repo-url>
-cd <repo-folder>
-Create a virtual environment (recommended):
-Bash
-python -m venv venv
-Activate the environment:
-Windows PowerShell:
-PowerShell
-venv\Scripts\Activate.ps1
-Windows CMD:
-Batch file
-venv\Scripts\activate.bat
-Mac/Linux:
-Bash
-source venv/bin/activate
-Install dependencies:
-Bash
-pip install fastapi uvicorn
-Run the API:
-Bash
-uvicorn main:app --reload
-6. Open your browser at 
-http://127.0.0.1:8000/docs⁠ to see Swagger UI and test the endpoints.
+1. Clone this repository:
+   
+            git clone <your-repo-url>
+            cd <repo-folder>
+
+3. Create a virtual environment (recommended):
+            python -m venv venv
+
+4. Activate the environment:
+  Windows PowerShell:
+
+            venv\Scripts\Activate.ps1
+   Windows CMD:
+   
+            venv\Scripts\activate.bat
+   Mac/Linux:
+   
+            source venv/bin/activate
+6. Install dependencies:
+   
+           pip install fastapi uvicorn
+8. Run the API:
+   
+            uvicorn main:app --reload
+10. Open your browser at
+    
+            http://127.0.0.1:8000/docs⁠ to see Swagger UI and test the endpoints.
+    
 📌 Key Learnings
-Difference between query parameters and request body
-Using Pydantic models for input validation
-Handling errors gracefully with HTTPException
-Unique IDs management using a separate JSON file
-Converting a CLI project into a professional backend API
+
+Difference between query parameters and request body.
+
+Using Pydantic models for input validation.
+
+Handling errors gracefully with HTTPException.
+
+Unique IDs management using a separate JSON file.
+
+Converting a CLI project into a professional backend API.
