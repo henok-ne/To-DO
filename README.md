@@ -20,10 +20,10 @@ It demonstrates:
    - JSON body example:  
    
 json
-   {
+   ```{
      "title": "Study Python",
      "completed": false
-   }
+   }```
 2. View All Tasks
 GET /tasks
 Returns all tasks in structured JSON
