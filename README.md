@@ -20,10 +20,10 @@ It demonstrates:
    - JSON body example:  
    
 json
-   ```{
+   {
      "title": "Study Python",
      "completed": false
-   }```
+   }
 
 2. View All Tasks
 GET /tasks
@@ -31,15 +31,25 @@ Returns all tasks in structured JSON
 3. Update Task Completion
 PUT /tasks/{task_id}
 JSON body example:
+json
+   {
+     "title": "Study Python",
+     "completed": false
+   }
+View All Tasks
+GET /tasks
+Returns all tasks in structured JSON
+Update Task Completion
+PUT /tasks/{task_id}
+JSON body example:
 JSON
 {
   "completed": true
 }
-4. Delete Task
+Delete Task
 DELETE /tasks/{task_id}
 Removes a task by its unique ID
-
-   📝 Task Model
+📝 Task Model
 Tasks are represented using a dataclass:
 Python
 @dataclass
@@ -48,27 +58,30 @@ class Task:
     title: str
     completed: bool = False
 Each task has a unique ID, title, and completion status.
-
-        💻 How to Run
-1. Clone this repository:
-
+💻 How to Run
+Clone this repository:
+Bash
 git clone <your-repo-url>
 cd <repo-folder>
-
-2. Create a virtual environment (recommended):
+Create a virtual environment (recommended):
+Bash
 python -m venv venv
-
-3. Activate the environment:
-  Windows PowerShell:
-    venv\Scripts\Activate.ps1
-   Windows CMD:
-   venv\Scripts\activate.bat
-   Mac/Linux:
-   source venv/bin/activate
-4. Install dependencies:
-   pip install fastapi uvicorn
-5. Run the API:
-    uvicorn main:app --reload
+Activate the environment:
+Windows PowerShell:
+PowerShell
+venv\Scripts\Activate.ps1
+Windows CMD:
+Batch file
+venv\Scripts\activate.bat
+Mac/Linux:
+Bash
+source venv/bin/activate
+Install dependencies:
+Bash
+pip install fastapi uvicorn
+Run the API:
+Bash
+uvicorn main:app --reload
 6. Open your browser at 
 http://127.0.0.1:8000/docs⁠ to see Swagger UI and test the endpoints.
 📌 Key Learnings
