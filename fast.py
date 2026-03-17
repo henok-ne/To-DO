@@ -3,25 +3,22 @@ import json
 import os
 from struct12 import Task 
 from dataclasses import dataclass
+from pydantic import BaseModel
+from struct12 import Task
 
 app = FastAPI()
 TASK_FILE = "tasks.json"
-ID_FILE = "next_id.json"  # To track next unique ID
+ID_FILE = "next_id.json"
 
-# -------------------- Task Model --------------------
-@dataclass
-class Task:
-    id: int
+# Pydantic models
+class TaskIn(BaseModel):
     title: str
     completed: bool = False
 
-    def toggle(self):
-        self.completed = not self.completed
+class TaskUpdate(BaseModel):
+    completed: bool
 
-    def to_dict(self):
-        return {"id": self.id, "title": self.title, "completed": self.completed}
-
-# -------------------- Helper Functions --------------------
+# Load tasks safely
 def load_tasks():
     if not os.path.exists(TASK_FILE):
         return []
@@ -31,17 +28,18 @@ def load_tasks():
             tasks = []
             for item in data:
                 task = Task(item["id"], item["title"])
-                task.completed = item["completed"]
+                task.completed = item.get("completed", False)
                 tasks.append(task)
             return tasks
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
+# Save tasks
 def save_tasks(tasks):
     with open(TASK_FILE, "w") as file:
-        json.dump([task.to_dict() for task in tasks], file, indent=4)
+        json.dump([t.to_dict() for t in tasks], file, indent=4)
 
-# -------------------- ID Tracking --------------------
+# Load next ID
 def load_next_id():
     if not os.path.exists(ID_FILE):
         return 1
@@ -52,29 +50,30 @@ def load_next_id():
     except (FileNotFoundError, json.JSONDecodeError):
         return 1
 
+# Save next ID
 def save_next_id(next_id):
     with open(ID_FILE, "w") as file:
-        json.dump({"next_id": next_id}, file)
+        json.dump({"next_id": next_id}, file, indent=4)
 
-# -------------------- API Routes --------------------
+# Home endpoint
 @app.get("/")
 def home():
     return {"message": "Welcome to the To-Do API!"}
 
+# Get all tasks
 @app.get("/tasks")
 def get_tasks():
     tasks = load_tasks()
-    return {"tasks": [task.to_dict() for task in tasks]}
+    return {"tasks": [t.to_dict() for t in tasks]}
 
+# Add a new task
 @app.post("/tasks")
-def add_task(title: str):
+def add_task(task: TaskIn):
     tasks = load_tasks()
     next_id = load_next_id()
 
-    if not title.strip():
-        raise HTTPException(status_code=400, detail="Task cannot be empty.")
-
-    new_task = Task(next_id, title.strip())
+    new_task = Task(next_id, task.title)
+    new_task.completed = task.completed
     tasks.append(new_task)
     save_tasks(tasks)
 
@@ -83,22 +82,26 @@ def add_task(title: str):
 
     return {"message": "Task added successfully", "task": new_task.to_dict()}
 
+# Update task completion
 @app.put("/tasks/{task_id}")
-def toggle_task(task_id: int):
+def update_task(task_id: int, task_update: TaskUpdate):
     tasks = load_tasks()
     for task in tasks:
         if task.id == task_id:
-            task.toggle()
+            task.completed = task_update.completed
             save_tasks(tasks)
             return {"message": "Task updated", "task": task.to_dict()}
+
     raise HTTPException(status_code=404, detail="Task not found")
 
+# Delete a task
 @app.delete("/tasks/{task_id}")
 def delete_task(task_id: int):
     tasks = load_tasks()
-    for idx, task in enumerate(tasks):
+    for i, task in enumerate(tasks):
         if task.id == task_id:
-            removed = tasks.pop(idx)
+            removed_task = tasks.pop(i)
             save_tasks(tasks)
-            return {"message": "Task deleted", "task": removed.to_dict()}
+            return {"message": "Task deleted", "task": removed_task.to_dict()}
+
     raise HTTPException(status_code=404, detail="Task not found")
