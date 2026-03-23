@@ -4,14 +4,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List
 from pydantic import BaseModel
-from database import SessionLocal, engine
+
+from database import SessionLocal, Base, engine
 import models
 from security import hash_password, verify_password
 from auth import create_access_token, decode_access_token
 
+# Create tables
+Base.metadata.create_all(bind=engine)
 
-models.Base.metadata.create_all(bind=engine)
-
+# FastAPI app
 app = FastAPI()
 
 # CORS
@@ -27,13 +29,10 @@ app.add_middleware(
 # OAuth2
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-# Pydantic Models
-class TaskResponse(BaseModel):
-    id: int
-    title: str
-    completed: bool
-    class Config:
-        orm_mode = True
+# Pydantic models
+class UserCreate(BaseModel):
+    username: str
+    password: str
 
 class TaskCreate(BaseModel):
     title: str
@@ -41,6 +40,13 @@ class TaskCreate(BaseModel):
 class TaskUpdate(BaseModel):
     title: str | None
     completed: bool | None
+
+class TaskResponse(BaseModel):
+    id: int
+    title: str
+    completed: bool
+    class Config:
+        orm_mode = True
 
 # DB dependency
 def get_db():
@@ -62,20 +68,22 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 
 # Signup
 @app.post("/signup", status_code=201)
-def signup(username: str, password: str, db: Session = Depends(get_db)):
-    hashed = hash_password(password)
-    user = models.User(username=username, hashed_password=hashed)
-    db.add(user)
+def signup(user: UserCreate, db: Session = Depends(get_db)):
+    if len(user.password) > 72:
+        raise HTTPException(status_code=400, detail="Password cannot be longer than 72 characters")
+    hashed = hash_password(user.password)
+    db_user = models.User(username=user.username, hashed_password=hashed)
+    db.add(db_user)
     db.commit()
     return {"message": "user created"}
 
 # Login
 @app.post("/login")
-def login(username: str, password: str, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.username == username).first()
-    if not user or not verify_password(password, user.hashed_password):
+def login(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.username == user.username).first()
+    if not db_user or not verify_password(user.password, db_user.hashed_password):
         raise HTTPException(status_code=400, detail="Invalid credentials")
-    token = create_access_token(user.id)
+    token = create_access_token(db_user.id)
     return {"access_token": token}
 
 # Create Task
@@ -112,12 +120,12 @@ def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db), c
     db.refresh(t)
     return t
 
-# Delete Task
+
 @app.delete("/tasks/{task_id}", status_code=204)
 def delete_task(task_id: int, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     t = db.query(models.Task).filter(models.Task.id == task_id, models.Task.owner_id == current_user.id).first()
     if not t:
-            raise HTTPException(status_code=404, detail="Task not found")
+        raise HTTPException(status_code=404, detail="Task not found")
     db.delete(t)
     db.commit()
-    return 
+    return
