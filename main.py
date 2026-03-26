@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from typing import List
-
+from fastapi.security import OAuth2PasswordRequestForm
 import models
 import schemas
 from database import SessionLocal, engine, Base
@@ -60,7 +60,6 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 
-from fastapi.security import OAuth2PasswordRequestForm
 
 @app.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
