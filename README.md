@@ -33,6 +33,7 @@ DELETE /tasks/{task_id}
 2. Install dependencies
 
 pip install requirements.txt
+
 3. Start PostgreSQL
 4. Run server
 
