@@ -1,5 +1,5 @@
 # Task Management API (FastAPI)
-
+---correcting
 This is a RESTful backend API that allows authenticated users to manage their personal tasks.
 
 ## Features
@@ -30,13 +30,11 @@ DELETE /tasks/{task_id}
 ## How to Run
 
 1. Clone the repository
-2. Install dependencies
-
-pip install requirements.txt
+2. Install dependencies:
+            ``` pip install requirements.txt ```
 3. Start PostgreSQL
-4. Run server
-
-uvicorn main:app --reload
+4. Run server:
+     ```uvicorn main:app --reload```
 
 ## Future Improvements
 
