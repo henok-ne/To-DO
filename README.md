@@ -1,5 +1,4 @@
 # Task Management API (FastAPI)
----correcting
 This is a RESTful backend API that allows authenticated users to manage their personal tasks.
 
 ## Features
