@@ -17,6 +17,7 @@ This is a RESTful backend API that allows authenticated users to manage their pe
 - SQLAlchemy
 - Passlib (bcrypt)
 - Python-JOSE (JWT)
+-Docker & Docker Compose
 
 ## API Endpoints
 
@@ -26,20 +27,47 @@ GET /tasks
 PUT /tasks/{task_id}  
 DELETE /tasks/{task_id}
 
-## How to Run
+## ⚙️ Local Setup
 
-1. Clone the repository
-2. Install dependencies:
-            ``` pip install requirements.txt ```
+### 1. Clone the repository
+```bash
+git clone <your-repo-link>
+cd <your-project-folder>
+
+2. Install dependencies
+```bash
+pip install -r requirements.txt
 3. Start PostgreSQL
-4. Run server:
-     ```uvicorn main:app --reload```
 
-## Future Improvements
+Make sure PostgreSQL is running locally.
 
-- Docker containerization
-- Deployment to cloud platform
-- Pagination
-- Task deadlines
-- User roles
+4. Run the server
+```bash
+uvicorn main:app --reload
 
+5. Open API docs
+```bash
+http://127.0.0.1:8000/docs
+
+🐳 Docker Setup
+
+Run the full system (FastAPI + PostgreSQL):
+```bash
+docker-compose up --build
+```bash
+Then open:
+http://localhost:8000/docs
+
+🌐 Live Deployment
+
+The API is deployed and accessible online:
+
+👉 https://your-render-link.onrender.com/docs
+
+📈 Future Improvements
+Pagination for tasks
+Task deadlines and priorities
+User roles (admin / standard)
+Refresh tokens for authentication
+Rate limiting
+Improved error handling
