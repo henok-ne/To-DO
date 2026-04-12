@@ -27,7 +27,7 @@ GET /tasks
 PUT /tasks/{task_id}  
 DELETE /tasks/{task_id}
 
-## ⚙️ Local Setup
+## Local Setup
 
 ### 1. Clone the repository
 ```bash
@@ -64,16 +64,16 @@ Live Deployment
 
 The API is deployed and accessible online:
 
-👉 https://your-render-link.onrender.com/docs
+https://your-render-link.onrender.com/docs
 
 Author
 
 Henok Mesfin
 Backend Developer (FastAPI / Python)
 
-GitHub: https://github.com/henok-ne
+GitHub: https://github.com/henok-ne/task-management-rest-api-fastapi
 
-📈 Future Improvements
+ Future Improvements
 Pagination for tasks
 Task deadlines and priorities
 User roles (admin / standard)
