@@ -31,12 +31,13 @@ DELETE /tasks/{task_id}
 
 ### 1. Clone the repository
 ```bash
-git clone <your-repo-link>
-cd <your-project-folder>
-
+      git clone <your-repo-link>
+      cd <your-project-folder>
+```
 2. Install dependencies
 ```bash
 pip install -r requirements.txt
+```
 3. Start PostgreSQL
 
 Make sure PostgreSQL is running locally.
@@ -44,21 +45,22 @@ Make sure PostgreSQL is running locally.
 4. Run the server
 ```bash
 uvicorn main:app --reload
-
+```
 5. Open API docs
 ```bash
 http://127.0.0.1:8000/docs
-
-🐳 Docker Setup
+```
+Docker Setup
 
 Run the full system (FastAPI + PostgreSQL):
 ```bash
 docker-compose up --build
+```
 ```bash
 Then open:
 http://localhost:8000/docs
-
-🌐 Live Deployment
+```
+Live Deployment
 
 The API is deployed and accessible online:
 
