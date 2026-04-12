@@ -64,6 +64,13 @@ The API is deployed and accessible online:
 
 👉 https://your-render-link.onrender.com/docs
 
+Author
+
+Henok Mesfin
+Backend Developer (FastAPI / Python)
+
+GitHub: https://github.com/henok-ne
+
 📈 Future Improvements
 Pagination for tasks
 Task deadlines and priorities
